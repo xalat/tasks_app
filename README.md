@@ -4,6 +4,10 @@ A la racine du projet:
 Lancer les conteneurs
 `./start.sh  
 `
+Lancer les migrations DB
+`docker exec -it laravel_app php artisan migrate
+`
+
 Installer les packages front 
 `docker exec -it react_app npm install
 `
