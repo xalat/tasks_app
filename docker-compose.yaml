@@ -1,0 +1,63 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: laravel_app
+    user: "${UID:-1000}:${GID:-1000}"
+    volumes:
+      - ./backend:/var/www
+    ports:
+      - "8000:8000"
+    depends_on:
+      - mariadb
+    environment:
+      DB_HOST: mariadb
+      DB_PORT: 3306
+      DB_DATABASE: laravel
+      DB_USERNAME: root
+      DB_PASSWORD: root
+    command: >
+      sh -c "
+        if [ ! -f artisan ]; then
+          composer create-project laravel/laravel:^9.0 .;
+        fi &&
+        php artisan serve --host=0.0.0.0 --port=8000
+      "
+
+  node:
+    image: node:18
+    container_name: react_app
+    working_dir: /app
+    volumes:
+      - ./frontend:/app
+    ports:
+      - "5173:5173"
+    user: "${UID:-1000}:${GID:-1000}"
+    command: >
+      sh -c "
+        if [ ! -f package.json ]; then
+          echo 'Error: package.json not found';
+          exit 1;
+        fi &&
+        npm install &&
+        npm run dev -- --host
+      "
+    depends_on:
+      - app
+
+
+  mariadb:
+    image: mariadb:10.5
+    container_name: mariadb
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: laravel
+    volumes:
+      - db_data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+
+volumes:
+  db_data:
