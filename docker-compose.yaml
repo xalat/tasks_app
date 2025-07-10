@@ -51,5 +51,14 @@ services:
     ports:
       - "3306:3306"
 
+  maildev:
+    image: maildev/maildev:2.1.0
+    ports:
+      - "1025:1025"  # SMTP port
+      - "1080:1080"  # Web interface port
+    networks:
+      - sail
+
+
 volumes:
   db_data:

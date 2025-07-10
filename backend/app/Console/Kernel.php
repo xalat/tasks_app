@@ -15,7 +15,10 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        // $schedule->command('inspire')->hourly();
+        $schedule->command('tasks:notify-old-pending')
+            ->daily()
+            ->at('09:00');
+
     }
 
     /**
