@@ -12,6 +12,7 @@ services:
     depends_on:
       - mariadb
     environment:
+      DB_CONNECTION: mysql
       DB_HOST: mariadb
       DB_PORT: 3306
       DB_DATABASE: laravel
@@ -34,17 +35,8 @@ services:
     ports:
       - "5173:5173"
     user: "${UID:-1000}:${GID:-1000}"
-    command: >
-      sh -c "
-        if [ ! -f package.json ]; then
-          echo 'Error: package.json not found';
-          exit 1;
-        fi &&
-        npm install &&
-        npm run dev -- --host
-      "
-    depends_on:
-      - app
+    tty: true
+    stdin_open: true
 
 
   mariadb:
