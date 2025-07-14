@@ -56,8 +56,6 @@ services:
     ports:
       - "1025:1025"  # SMTP port
       - "1080:1080"  # Web interface port
-    networks:
-      - sail
 
 
 volumes:
